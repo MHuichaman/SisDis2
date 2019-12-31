@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package grpc;
+import "google/protobuf/timestamp.proto";
+
+service Chat {
+    rpc SendMessage (Msg) returns (Empty) {}
+}
+
+message Empty{}
+
+message Msg {
+    string id = 1;
+    string message = 2;
+    google.protobuf.Timestamp timestamp = 3;   
+}
+
+message User {
+    string user_id = 1;
+}
+
+/*
+Para el listado de clientes en el server de chat
+*/
+message UserList{
+    repeated User users = 1;
+}
+
+/*
+Para el listado de mensajes del cliente que lo solicite
+*/
+message UserMsgList {
+    repeated Msg messages = 1;
+}
