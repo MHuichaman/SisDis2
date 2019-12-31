@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package grpc;
+
+service Chat {
+    rpc SendMessage (ClientRequest) returns (ClientMessage) {}
+}
+
+message ClientRequest {
+    string name = 1; 
+}
+
+message ClientMessage {
+    string message = 1;
+}
