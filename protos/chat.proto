@@ -11,7 +11,7 @@ service Chat {
 service User {
     rpc GetUsersList (Empty) returns (UserList); /* Lista de usuarios */
     rpc Leave (UserID) returns (Empty); /* desconecta al usuario */
-    rpc JoinChat (UserID) returns (JoinResponse) /* conexion al chat */
+    rpc JoinChat (UserID) returns (JoinResponse); /* conexion al chat */
 }
 
 message Empty{
@@ -19,7 +19,7 @@ message Empty{
 }
 
 message JoinResponse {
-    bool response = 1
+    bool response = 1;
 }
 
 message Msg {
@@ -36,7 +36,7 @@ message UserID {
 Para el listado de clientes en el server de chat
 */
 message UserList{
-    repeated User users = 1;
+    repeated UserID users = 1;
 }
 
 /*
