@@ -5,9 +5,22 @@ import "google/protobuf/timestamp.proto";
 
 service Chat {
     rpc SendMessage (Msg) returns (Empty) {}
+    rpc Channel (Empty) returns (stream Msg) {} /* since no terminating string */
 }
 
-message Empty{}
+service User {
+    rpc GetUsersList (Empty) returns (UserList); /* Lista de usuarios */
+    rpc Leave (UserID) returns (Empty); /* desconecta al usuario */
+    rpc JoinChat (UserID) returns (JoinResponse) /* conexion al chat */
+}
+
+message Empty{
+    /* same as in google/protobuf/empty.proto */
+}
+
+message JoinResponse {
+    bool response = 1
+}
 
 message Msg {
     string id = 1;
@@ -15,7 +28,7 @@ message Msg {
     google.protobuf.Timestamp timestamp = 3;   
 }
 
-message User {
+message UserID {
     string user_id = 1;
 }
 
