@@ -30,7 +30,22 @@ class Client:
                 else:
                     #this way we make sure that id is unique
                     print("Por favor escoger otro nombre de usuario")
-    #
+    #go for the basics first
+    def getUsers(self):
+        print("---\n Lista de usuarios on: ")
+        list_users = self.user_stub.GetUsersList(chat_pb2.Empty())
+        
+        for user in list_users.users:
+            print("- ", user.user_id)
+        
+        print("---\n")
+
+    #how to leave server
+    def leave(self):
+        current_user = chat_pb2.UserID()
+        current_user.user_id = self.user_name
+        self.user_stub.Leave(current_user)
+
 
 if __name__ == '__main__':
     logging.basicConfig()
