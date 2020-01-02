@@ -9,8 +9,29 @@ import chat_pb2_grpc
 
 class Chat(chat_pb2_grpc.ChatServicer):
 
+    def begin(self):
+        #para el almacenamiento de msjes del chat
+        self.chats = []
+    
+    def Channel(self, request, context):
+        count = 0
+        while True:
+            chans = self.chats
+            while len(chats) > count:
+                chan = chans[count]
+                count += 1
+                yield chan
+    
+
     def SendMessage(self, request, context):
-        return chat_pb2.ClientMessage(message='Sup!, %s!' % request.name)
+        file = open("log.txt", "a")
+        #TODO a lot
+
+        return chat_pb2.Empty()
+
+    #and thats all about chat
+
+#users @ server code here
 
 
 def serve():
