@@ -11,7 +11,7 @@ service Chat {
 service User {
     rpc GetUsersList (Empty) returns (UserList); /* Lista de usuarios */
     rpc Leave (UserID) returns (Empty); /* desconecta al usuario */
-    rpc JoinChat (UserID) returns (JoinResponse); /* conexion al chat */
+    rpc JoinServer (UserID) returns (JoinResponse); /* conexion al server */
 }
 
 message Empty{

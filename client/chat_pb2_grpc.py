@@ -83,8 +83,8 @@ class UserStub(object):
         request_serializer=chat__pb2.UserID.SerializeToString,
         response_deserializer=chat__pb2.Empty.FromString,
         )
-    self.JoinChat = channel.unary_unary(
-        '/grpc.User/JoinChat',
+    self.JoinServer = channel.unary_unary(
+        '/grpc.User/JoinServer',
         request_serializer=chat__pb2.UserID.SerializeToString,
         response_deserializer=chat__pb2.JoinResponse.FromString,
         )
@@ -108,8 +108,8 @@ class UserServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def JoinChat(self, request, context):
-    """conexion al chat 
+  def JoinServer(self, request, context):
+    """conexion al server 
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -128,8 +128,8 @@ def add_UserServicer_to_server(servicer, server):
           request_deserializer=chat__pb2.UserID.FromString,
           response_serializer=chat__pb2.Empty.SerializeToString,
       ),
-      'JoinChat': grpc.unary_unary_rpc_method_handler(
-          servicer.JoinChat,
+      'JoinServer': grpc.unary_unary_rpc_method_handler(
+          servicer.JoinServer,
           request_deserializer=chat__pb2.UserID.FromString,
           response_serializer=chat__pb2.JoinResponse.SerializeToString,
       ),
