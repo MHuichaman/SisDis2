@@ -9,7 +9,7 @@ import chat_pb2_grpc
 
 class Chat(chat_pb2_grpc.ChatServicer):
 
-    def begin(self):
+    def __init__(self):
         #para el almacenamiento de msjes del chat
         self.chats = []
     
@@ -25,7 +25,8 @@ class Chat(chat_pb2_grpc.ChatServicer):
 
     def SendMessage(self, request, context):
         file = open("log.txt", "a")
-        #TODO a lot
+
+
 
         return chat_pb2.Empty()
 
@@ -37,6 +38,7 @@ class Chat(chat_pb2_grpc.ChatServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     chat_pb2_grpc.add_ChatServicer_to_server(Chat(), server)
+    chat_pb2_grpc.add_UserServicer_to_server(User(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     server.wait_for_termination()

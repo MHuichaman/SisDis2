@@ -137,3 +137,62 @@ def add_UserServicer_to_server(servicer, server):
   generic_handler = grpc.method_handlers_generic_handler(
       'grpc.User', rpc_method_handlers)
   server.add_generic_rpc_handlers((generic_handler,))
+
+
+class MessageStub(object):
+  # missing associated documentation comment in .proto file
+  pass
+
+  def __init__(self, channel):
+    """Constructor.
+
+    Args:
+      channel: A grpc.Channel.
+    """
+    self.getMessages = channel.unary_unary(
+        '/grpc.Message/getMessages',
+        request_serializer=chat__pb2.UserID.SerializeToString,
+        response_deserializer=chat__pb2.UserMsgList.FromString,
+        )
+    self.SaveUserMessage = channel.unary_unary(
+        '/grpc.Message/SaveUserMessage',
+        request_serializer=chat__pb2.UserID.SerializeToString,
+        response_deserializer=chat__pb2.Empty.FromString,
+        )
+
+
+class MessageServicer(object):
+  # missing associated documentation comment in .proto file
+  pass
+
+  def getMessages(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def SaveUserMessage(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+
+def add_MessageServicer_to_server(servicer, server):
+  rpc_method_handlers = {
+      'getMessages': grpc.unary_unary_rpc_method_handler(
+          servicer.getMessages,
+          request_deserializer=chat__pb2.UserID.FromString,
+          response_serializer=chat__pb2.UserMsgList.SerializeToString,
+      ),
+      'SaveUserMessage': grpc.unary_unary_rpc_method_handler(
+          servicer.SaveUserMessage,
+          request_deserializer=chat__pb2.UserID.FromString,
+          response_serializer=chat__pb2.Empty.SerializeToString,
+      ),
+  }
+  generic_handler = grpc.method_handlers_generic_handler(
+      'grpc.Message', rpc_method_handlers)
+  server.add_generic_rpc_handlers((generic_handler,))

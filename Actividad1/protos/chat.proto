@@ -14,6 +14,11 @@ service User {
     rpc JoinServer (UserID) returns (JoinResponse); /* conexion al server */
 }
 
+service Message{
+    rpc getMessages (UserID) returns (UserMsgList);
+    rpc SaveUserMessage (UserID) returns (Empty);
+}
+
 message Empty{
     /* same as in google/protobuf/empty.proto */
 }
