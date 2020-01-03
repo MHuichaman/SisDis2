@@ -51,6 +51,13 @@ class User(chat_pb2_grpc.UserServicer):
 
         return joined
 
+    def Leave(self, request, context):
+        user = request.user_id
+        self.users.remove(user) #remove id from existing list
+
+        #return none
+        return chat_pb2.Empty()
+
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     chat_pb2_grpc.add_ChatServicer_to_server(Chat(), server)
