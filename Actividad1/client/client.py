@@ -5,11 +5,14 @@ import grpc
 import chat_pb2
 import chat_pb2_grpc
 
+from datetime import datetime
+from google.protobuf.timestamp_pb2 import Timestamp
+
 class Client:
 
     def __init__(self): #as to initialize client
         channel = grpc.insecure_channel('server:50051')
-        self.chat_stub = chat_pb2_grpc.ChatStub(channel)
+
         self.user_stub = chat_pb2_grpc.UserStub(channel)
 
         auth = chat_pb2.UserID()
@@ -32,6 +35,8 @@ class Client:
                 #this way we make sure that id is unique
                 print("Por favor escoger otro nombre de usuario")
 
+        #lets move this since it only needs to be created once user joins server
+        self.chat_stub = chat_pb2_grpc.ChatStub(channel)
     #go for the basics first
     def GetUsersList(self):
         print("---\n Lista de usuarios on: ")
@@ -48,6 +53,18 @@ class Client:
         current_user.user_id = self.user_name
         self.user_stub.Leave(current_user)
 
+    def SendMessage(self, content):
+        if content.strip():
+            print("hihi, i did it")
+            time_now = Timestamp()
+            time_now.GetCurrentTime()
+            
+            message = chat_pb2.Msg()
+            message.id = time_now + "," + self.user_name #untested
+            message.message = content
+            message.timestamp = time_now
+
+            self.chat_stub.SendMessage(message)
 
 
 if __name__ == '__main__':

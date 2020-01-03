@@ -73,6 +73,13 @@ class User(chat_pb2_grpc.UserServicer):
         return list_users
 
 #will be needed a message code here
+class Message(chat_pb2_grpc.MessageServicer):
+
+    def __init__(self):
+        self.messages_sent = {}
+
+    def SaveUserMessage(self, request, context):
+        
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
