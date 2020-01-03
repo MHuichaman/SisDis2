@@ -33,7 +33,23 @@ class Chat(chat_pb2_grpc.ChatServicer):
     #and thats all about chat
 
 #users @ server code here
+class User(chat_pb2_grpc.UserServicer):
 
+    def __init__(self):
+        self.users = []
+
+    def Join(self, request, context):
+        joined = chat_pb2.JoinResponse()
+
+        if request.user_id in self.users:
+            joined.response = False
+            #because already joined
+            return joined
+
+        joined.response = True
+        self.users.append(request.user_id)
+
+        return joined
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
