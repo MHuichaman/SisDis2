@@ -38,7 +38,7 @@ class User(chat_pb2_grpc.UserServicer):
     def __init__(self):
         self.users = []
 
-    def Join(self, request, context):
+    def JoinServer(self, request, context):
         joined = chat_pb2.JoinResponse()
 
         if request.user_id in self.users:
@@ -57,6 +57,22 @@ class User(chat_pb2_grpc.UserServicer):
 
         #return none
         return chat_pb2.Empty()
+
+    def GetUsersList(self, request, context):
+        list_users = chat_pb2.UserList() #inicializa lista de usuarios
+
+        #como definimos un repeated, ahora debemos llenarlo
+        #usando una lista auxiliar
+        users_on = []
+        for user in self.users:
+            user_joined = chat_pb2.UserID()
+            user_joined.user_id = user
+            users_on.append(user_joined)
+
+        list_users.users.extend(users_on)
+        return list_users
+
+#will be needed a message code here
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
