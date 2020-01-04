@@ -5,7 +5,8 @@ import grpc
 
 import chat_pb2
 import chat_pb2_grpc
-
+from google.protobuf.timestamp_pb2 import Timestamp
+from datetime import datetime
 
 class Chat(chat_pb2_grpc.ChatServicer):
 
@@ -17,7 +18,7 @@ class Chat(chat_pb2_grpc.ChatServicer):
         count = 0
         while True:
             chans = self.chats
-            while len(chats) > count:
+            while len(chans) > count:
                 chan = chans[count]
                 count += 1
                 yield chan
@@ -25,8 +26,18 @@ class Chat(chat_pb2_grpc.ChatServicer):
 
     def SendMessage(self, request, context):
         file = open("log.txt", "a")
+        timestamp = Timestamp()
+        timestamp.GetCurrentTime()
 
+        user = request.id.split(",")[1]
 
+        date_user = datetime.fromtimestamp(request.timestamp.seconds).strftime("%d/%m/%Y - %H:%M:%S")
+        date_server = datetime.fromtimestamp(timestamp.seconds).strftime("%d/%m/%Y - %H:%M:%S")
+        
+        file.write("[ " + request.id + "/" + request.message + ", " + user + ", user: " + date_user + ", server: " + date_server + " ]\n")
+        file.close()
+
+        self.chats.append(request)
 
         return chat_pb2.Empty()
 
@@ -79,12 +90,30 @@ class Message(chat_pb2_grpc.MessageServicer):
         self.messages_sent = {}
 
     def SaveUserMessage(self, request, context):
+        user = request.id.split(",")[1]
+
+        if user not in self.messages_sent:
+            self.messages_sent[user] = [request] #save whole message into the user messages
+        else:
+            self.messages_sent[user].append(request)
         
+        return chat_pb2.Empty() 
+
+    def GetMessages(self, request, context):
+        user = request.user_id
+        messages = chat_pb2.UserMsgList()
+
+        if user not in self.messages_sent:
+            return messages
+
+        messages.messages.extends(self.messages_sent[user])
+        return messages
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     chat_pb2_grpc.add_ChatServicer_to_server(Chat(), server)
     chat_pb2_grpc.add_UserServicer_to_server(User(), server)
+    chat_pb2_grpc.add_MessageServicer_to_server(Message(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     server.wait_for_termination()

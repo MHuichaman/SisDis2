@@ -149,14 +149,14 @@ class MessageStub(object):
     Args:
       channel: A grpc.Channel.
     """
-    self.getMessages = channel.unary_unary(
-        '/grpc.Message/getMessages',
+    self.GetMessages = channel.unary_unary(
+        '/grpc.Message/GetMessages',
         request_serializer=chat__pb2.UserID.SerializeToString,
         response_deserializer=chat__pb2.UserMsgList.FromString,
         )
     self.SaveUserMessage = channel.unary_unary(
         '/grpc.Message/SaveUserMessage',
-        request_serializer=chat__pb2.UserID.SerializeToString,
+        request_serializer=chat__pb2.Msg.SerializeToString,
         response_deserializer=chat__pb2.Empty.FromString,
         )
 
@@ -165,7 +165,7 @@ class MessageServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
-  def getMessages(self, request, context):
+  def GetMessages(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -182,14 +182,14 @@ class MessageServicer(object):
 
 def add_MessageServicer_to_server(servicer, server):
   rpc_method_handlers = {
-      'getMessages': grpc.unary_unary_rpc_method_handler(
-          servicer.getMessages,
+      'GetMessages': grpc.unary_unary_rpc_method_handler(
+          servicer.GetMessages,
           request_deserializer=chat__pb2.UserID.FromString,
           response_serializer=chat__pb2.UserMsgList.SerializeToString,
       ),
       'SaveUserMessage': grpc.unary_unary_rpc_method_handler(
           servicer.SaveUserMessage,
-          request_deserializer=chat__pb2.UserID.FromString,
+          request_deserializer=chat__pb2.Msg.FromString,
           response_serializer=chat__pb2.Empty.SerializeToString,
       ),
   }

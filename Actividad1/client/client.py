@@ -7,6 +7,7 @@ import chat_pb2_grpc
 
 from datetime import datetime
 from google.protobuf.timestamp_pb2 import Timestamp
+import threading
 
 class Client:
 
@@ -37,6 +38,11 @@ class Client:
 
         #lets move this since it only needs to be created once user joins server
         self.chat_stub = chat_pb2_grpc.ChatStub(channel)
+        self.message_stub = chat_pb2_grpc.MessageStub(channel)
+
+        #sin el thread nunca recibirán los mensajes :c
+        threading.Thread(target=self.GetMessagesChat, daemon=True).start()
+
     #go for the basics first
     def GetUsersList(self):
         print("---\n Lista de usuarios on: ")
@@ -53,18 +59,43 @@ class Client:
         current_user.user_id = self.user_name
         self.user_stub.Leave(current_user)
 
+    def GetMessagesChat(self):
+        user = chat_pb2.UserID()
+        user.user_id = self.user_name
+        messages = self.message_stub.GetMessages(user)
+
+        print("----\n Lista de mensajes: \n----")
+        for msg in self.chat_stub.Channel(chat_pb2.Empty()):
+            user_name = msg.id.split(",")[1]
+            timestamp = msg.timestamp
+            date_time = (datetime.fromtimestamp(timestamp.seconds)).strftime("%d/%m/%Y - %H:%M:%S")
+            print("[ " + date_time + " , " + user_name + " ]: " + msg.message + "\n")
+
+    def GetMessagesList(self):
+        user = chat_pb2.UserID()
+        user.user_id = self.user_name
+        messages = self.message_stub.GetMessages(user)
+
+        print("----\n Lista de mensajes: \n----")
+        for msg in messages.msgs:
+            user_name = msg.split(",")[1]
+            timestamp = msg.timestamp
+            date_time = datetime.fromtimestamp(timestamp.seconds).strftime("%d/%m/%Y - %H:%M:%S")
+            print("[ " + date_time + " , " + user_name + " ]: " + msg.message + "\n")
+
     def SendMessage(self, content):
         if content.strip():
-            print("hihi, i did it")
             time_now = Timestamp()
             time_now.GetCurrentTime()
             
             message = chat_pb2.Msg()
-            message.id = time_now + "," + self.user_name #untested
+            message.id = str(time_now.seconds) + "," + self.user_name #untested
             message.message = content
-            message.timestamp = time_now
+            message.timestamp.seconds = time_now.seconds
 
             self.chat_stub.SendMessage(message)
+            self.message_stub.SaveUserMessage(message)
+
 
 
 if __name__ == '__main__':
@@ -75,9 +106,12 @@ if __name__ == '__main__':
         user_input = input()
         if user_input == "list_users!":
             user.GetUsersList()
+        elif user_input == "list_messages!":
+            user.GetMessagesChat()
         elif user_input == "leave!":
             user.Leave()
             print("server says... bye bye :c")
             break
         else:
-            break
+            user.SendMessage(user_input)
+            

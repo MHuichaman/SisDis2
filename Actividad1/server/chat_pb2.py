@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='grpc',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\nchat.proto\x12\x04grpc\x1a\x1fgoogle/protobuf/timestamp.proto\"\x07\n\x05\x45mpty\" \n\x0cJoinResponse\x12\x10\n\x08response\x18\x01 \x01(\x08\"Q\n\x03Msg\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07message\x18\x02 \x01(\t\x12-\n\ttimestamp\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"\x19\n\x06UserID\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"\'\n\x08UserList\x12\x1b\n\x05users\x18\x01 \x03(\x0b\x32\x0c.grpc.UserID\"*\n\x0bUserMsgList\x12\x1b\n\x08messages\x18\x01 \x03(\x0b\x32\t.grpc.Msg2V\n\x04\x43hat\x12\'\n\x0bSendMessage\x12\t.grpc.Msg\x1a\x0b.grpc.Empty\"\x00\x12%\n\x07\x43hannel\x12\x0b.grpc.Empty\x1a\t.grpc.Msg\"\x00\x30\x01\x32\x87\x01\n\x04User\x12+\n\x0cGetUsersList\x12\x0b.grpc.Empty\x1a\x0e.grpc.UserList\x12\"\n\x05Leave\x12\x0c.grpc.UserID\x1a\x0b.grpc.Empty\x12.\n\nJoinServer\x12\x0c.grpc.UserID\x1a\x12.grpc.JoinResponse2g\n\x07Message\x12.\n\x0bgetMessages\x12\x0c.grpc.UserID\x1a\x11.grpc.UserMsgList\x12,\n\x0fSaveUserMessage\x12\x0c.grpc.UserID\x1a\x0b.grpc.Emptyb\x06proto3')
+  serialized_pb=_b('\n\nchat.proto\x12\x04grpc\x1a\x1fgoogle/protobuf/timestamp.proto\"\x07\n\x05\x45mpty\" \n\x0cJoinResponse\x12\x10\n\x08response\x18\x01 \x01(\x08\"Q\n\x03Msg\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07message\x18\x02 \x01(\t\x12-\n\ttimestamp\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"\x19\n\x06UserID\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"\'\n\x08UserList\x12\x1b\n\x05users\x18\x01 \x03(\x0b\x32\x0c.grpc.UserID\"*\n\x0bUserMsgList\x12\x1b\n\x08messages\x18\x01 \x03(\x0b\x32\t.grpc.Msg2V\n\x04\x43hat\x12\'\n\x0bSendMessage\x12\t.grpc.Msg\x1a\x0b.grpc.Empty\"\x00\x12%\n\x07\x43hannel\x12\x0b.grpc.Empty\x1a\t.grpc.Msg\"\x00\x30\x01\x32\x87\x01\n\x04User\x12+\n\x0cGetUsersList\x12\x0b.grpc.Empty\x1a\x0e.grpc.UserList\x12\"\n\x05Leave\x12\x0c.grpc.UserID\x1a\x0b.grpc.Empty\x12.\n\nJoinServer\x12\x0c.grpc.UserID\x1a\x12.grpc.JoinResponse2d\n\x07Message\x12.\n\x0bGetMessages\x12\x0c.grpc.UserID\x1a\x11.grpc.UserMsgList\x12)\n\x0fSaveUserMessage\x12\t.grpc.Msg\x1a\x0b.grpc.Emptyb\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -357,11 +357,11 @@ _MESSAGE = _descriptor.ServiceDescriptor(
   index=2,
   serialized_options=None,
   serialized_start=517,
-  serialized_end=620,
+  serialized_end=617,
   methods=[
   _descriptor.MethodDescriptor(
-    name='getMessages',
-    full_name='grpc.Message.getMessages',
+    name='GetMessages',
+    full_name='grpc.Message.GetMessages',
     index=0,
     containing_service=None,
     input_type=_USERID,
@@ -373,7 +373,7 @@ _MESSAGE = _descriptor.ServiceDescriptor(
     full_name='grpc.Message.SaveUserMessage',
     index=1,
     containing_service=None,
-    input_type=_USERID,
+    input_type=_MSG,
     output_type=_EMPTY,
     serialized_options=None,
   ),

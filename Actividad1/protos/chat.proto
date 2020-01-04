@@ -15,8 +15,8 @@ service User {
 }
 
 service Message{
-    rpc getMessages (UserID) returns (UserMsgList);
-    rpc SaveUserMessage (UserID) returns (Empty);
+    rpc GetMessages (UserID) returns (UserMsgList);
+    rpc SaveUserMessage (Msg) returns (Empty);
 }
 
 message Empty{
