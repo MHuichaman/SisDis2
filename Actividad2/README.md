@@ -1,6 +1,7 @@
 Para la ejecución:
 
 $docker-compose build
+
 $docker-compose up --scale client=2  #generará 2 clientes de forma inmediata con la configuración ya provista
 
 
