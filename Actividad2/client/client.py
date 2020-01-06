@@ -28,18 +28,18 @@ class Client():
     exclusive_queue = channel.queue_declare(queue='', exclusive= True)
     queue = exclusive_queue.method.queue
 
-    channel.queue_bind(exchange='broadcast', queue= queue)
+    channel.queue_bind(exchange='broadcast', queue=queue)
 
     def callback_get_msgs(ch, method, properties, body):
 
       message = json.loads(body.decode("utf-8"))
 
       user = message["user"]
-      content = message["user"]
+      content = message["message"]
       time_now = message["time_now"]
       date = (datetime.fromtimestamp(time_now)).strftime("%d/%m/%Y - %H:%M:%S")
 
-      print("[ " + date + " - " + user + " ]:" + content + " ")
+      print("[ " + date + " - " + user + " ]: " + content + " ")
       
     channel.basic_consume(
       queue=queue,
@@ -65,13 +65,12 @@ class Client():
       response_from_server = json.loads(body.decode("utf-8"))
 
       user = response_from_server["user"]
-      content = response_from_server["content"]
       kind = response_from_server["kind"]
       response = response_from_server["response"]
 
       if kind == "log_in":            
         if response == "Yay":
-            self.is_logged = True
+            self.is_on = True
             print("Inicio correcto!!")
 
         else:
@@ -122,7 +121,6 @@ class Client():
           'time_stamp': time_now
         }
       elif kind == "log_out":
-
         message = {
           'message_id' : str(uuid.uuid4()),
           'kind': "log_out", #to identify source on server side
@@ -131,7 +129,6 @@ class Client():
           'time_stamp': time_now
         }
       elif kind == "message":
-        
         message = {
           'message_id' : str(uuid.uuid4()),
           'user': self.user,
@@ -182,17 +179,20 @@ class Client():
   def Leave(self):
     self.send_message("log_out", "log_out")
     self.connection.close()
+
+  def thread_server_msgs(self):
+    threading.Thread(target=self.get_server_msgs(), daemon=True).start()
+  
+  def thread_msgs(self):
+    threading.Thread(target=self.get_msgs(), daemon=True).start()
   
 if __name__ == '__main__':
   logging.basicConfig()
   client = Client()
 
+  client.thread_server_msgs()
   client.Connect()
-
-  threading.Thread(target=client.get_server_msgs(), daemon=True).start()
-
-
-  threading.Thread(target=client.get_msgs(), daemon=True).start()
+  client.thread_msgs()
 
   while True:
     user_input = input()
@@ -209,4 +209,4 @@ if __name__ == '__main__':
 
     # Envío de un mensaje normal.
     else:
-        client.send(user_input, "message")
+      client.send_message(user_input, "message")
