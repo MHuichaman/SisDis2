@@ -1,29 +1,26 @@
 version: "3"
 
 services:
+  rabbitmq:
+    image: 'rabbitmq:3.6-management'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
   server:
-    build: server/
+    build: server
+    environment: 
+      AMQP_URL: 'amqp://rabbitmq?connection_attempts=5&retry_delay=5'
     command: python server.py
     volumes:
-      - ./server:/server
+      - ./server/:/server
+    depends_on: 
+      - rabbitmq
 
-  client1:
-    build: client/
-    # command: python client.py
-    # Test
+  client:
+    build: client
+    environment:
+      AMQP_URL: 'amqp://rabbitmq?connection_attempts=5&retry_delay=5'
     command: tail -f /dev/null
-    #command: python client.py
-    volumes:
-      - ./client:/client
-    depends_on:
-      - server
-  client2:
-    build: client/
-    # command: python client.py
-    # Test
-    command: tail -f /dev/null
-    #command: python client.py
-    volumes:
-      - ./client:/client
     depends_on:
       - server
